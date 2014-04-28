@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font:   14px Verdana Georgia sans-serif;
+      }
+      
+      #wrapper {
+        margin:   0 auto;
+        width:    700px;
+        
+      }
+      #watch {
+        font-size:    24px;
+      }
+    </style>
+    <script type="text/javascript">
+    
+      var watch = new StopWatch();
+      window.onload = function() {
+        
+        watch.init();
+      }
+    
+    function StopWatch() {
+      this.display = "#watch";  // init() updates this to an HTMLEntity
+      this.timeString = "00:00:00.000";
+    
+      var interval,
+        that = this,
+        startTime,
+        msToAdd = 0,
+        msTotal = 0;
+        
+      var update = function(reset) {
+        var dateRepresentation;
+        
+        msTotal = (Date.now() - startTime) + msToAdd;
+        if (reset) { msTotal = 0; }
+        dateRepresentation = new Date(msTotal);
+
+        that.timeString = (
+          ( (dateRepresentation.getUTCHours()<10 ? "0" : "") + dateRepresentation.getUTCHours()) +
+          ":" + ("00" + dateRepresentation.getUTCMinutes()).slice(-2) +
+          ":" + ("00" + dateRepresentation.getUTCSeconds()).slice(-2) +
+          ":" + ("000" + dateRepresentation.getUTCMilliseconds()).slice(-3));
+        that.display.innerText = that.timeString;
+        
+      }
+      
+      this.init = function() {
+        
+        if (this.display.charAt(0) === "#") {
+          this.display = this.display.slice(1);
+        }
+        this.display = document.getElementById(this.display);
+        
+        /* *********************
+           *********************
+        TODO:
+            make this less hacky
+            ie: store the start/stop button locations somewhere rather than hardcoding them in (as is now)
+           *********************
+           *********************
+        */
+        
+        var startBtn = document.getElementsByClassName("start");
+        startBtn[0].onclick = function(e) {
+          e.preventDefault();
+          that.start();
+          return false;
+        }
+        var resetBtn = document.getElementsByClassName("reset");
+        resetBtn[0].onclick = function(e) {
+          e.preventDefault();
+          that.reset();
+          return false;
+        }
+        
+        var stopBtn = document.getElementsByClassName("stop");
+        stopBtn[0].onclick = function(e) {
+          e.preventDefault();
+          that.stop();
+          return false;
+        }
+      } // init
+      
+      this.start = function() {
+        console.log("start fired");
+        startTime = new Date();
+        dumbStart = new Date();
+        interval = setInterval(update,80);
+      }
+      
+      this.stop = function() {
+        console.log("stop fired");
+        msToAdd = msTotal;
+        dumbStop = new Date();
+        clearInterval(interval);
+      }
+      this.reset = function() {
+        console.log("reset fired");
+        msToAdd = 0;
+        msTotal = 0;
+        this.stop();
+        update(true);
+      }
+      
+      this.debug = {};
+      this.debug.setToAdd = function(ms) {
+        msToAdd = ms;
+      }
+      
+      this.debug.setTotal = function(ms) {
+        msTotal = ms;
+      }
+    } // StopWatch()
+
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <header>
+        <h1>stopwatch (in html)</h1>
+      </header>
+      <div id="watchArea">
+        <span id="watch">00:00:00.000</span>
+        <br />
+        <input type="submit" class="start" value="START" />
+        <input type="submit" class="stop" value="STOP" />
+        <input type="submit" class="reset" value="RESET" />
+        
+      </div>
+    </div>
+  </body>
+</html>
