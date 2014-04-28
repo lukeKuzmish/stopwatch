@@ -14,11 +14,15 @@
       #watch {
         font-size:    24px;
       }
+      
+      .stop {
+        display:    none;
+      }
       footer {
         position:   absolute;
         bottom:    20px;
         clear:    both;
-        text-align:    center; 
+        text-align:    center;
       }
     </style>
     <script type="text/javascript">
@@ -73,12 +77,16 @@
         
         var startBtn = document.getElementsByClassName("start");
         startBtn[0].onclick = function(e) {
+          this.style.display="none";
+          stopBtn[0].style.display="inline";
           e.preventDefault();
           that.start();
           return false;
         }
         var resetBtn = document.getElementsByClassName("reset");
         resetBtn[0].onclick = function(e) {
+          stopBtn[0].style.display="none";
+          startBtn[0].style.display="inline";
           e.preventDefault();
           that.reset();
           return false;
@@ -86,6 +94,8 @@
         
         var stopBtn = document.getElementsByClassName("stop");
         stopBtn[0].onclick = function(e) {
+          this.style.display="none";
+          startBtn[0].style.display="inline";
           e.preventDefault();
           that.stop();
           return false;
